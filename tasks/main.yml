@@ -1,0 +1,15 @@
+---
+- name: Gather driver information
+  shell: modinfo ixgbevf | grep -i "^version:" | grep -Po "(?:(\d+)\.)?(?:(\d+)\.)?(\*|\d+)$"
+  register: ixgbevf_pre_install_version
+  ignore_errors: yes
+
+- include: install.yml
+  when: ixgbevf_pre_install_version.stdout != "{{ ixgbevf_version }}"
+
+- name: Gather driver information
+  shell: modinfo ixgbevf | grep -i "^version:" | grep -Po "(?:(\d+)\.)?(?:(\d+)\.)?(\*|\d+)$"
+  register: ixgbevf_post_install_version
+
+- name: Assert that driver matches wanted version
+  assert: { that: "ixgbevf_post_install_version.stdout == '{{ ixgbevf_version }}'" }
