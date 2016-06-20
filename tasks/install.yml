@@ -28,7 +28,6 @@
 
 - name: Add module via dkms
   command: dkms add -m ixgbevf -v "{{ ixgbevf_version }}"
-  ignore_errors: yes # 'dkms add' isn't idempotent - so we just skip errors
 
 - name: Build module via dkms
   command: dkms build -m ixgbevf -v "{{ ixgbevf_version }}"
